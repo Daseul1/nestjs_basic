@@ -40,7 +40,7 @@ export class AuthService {
     const payload = { email: email, sub: cat.id }; // sub : 토큰 제목 의미 ( cat의 고유 식별자를 넣음)
 
     return {
-      token: this.jwtService.sign(payload, { secret: 'accessKey' }), // 유저 정보를 담은 payload를 넣어 sign 메서드를 통해 토큰 생성
+      token: this.jwtService.sign(payload, { secret: process.env.JWT_SECRET }), // 유저 정보를 담은 payload를 넣어 sign 메서드를 통해 토큰 생성
     };
   }
 }

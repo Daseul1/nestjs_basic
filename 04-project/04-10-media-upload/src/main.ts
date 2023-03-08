@@ -4,9 +4,13 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as expressBasicAuth from 'express-basic-auth';
+import * as path from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // const app = await NestFactory.create(AppModule); // => app이 nest app으로 설정되기에
+  // express 용 app 으로 설정하기 위해 NestExpressApplication 제너릭 설정 필요
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter()); // 전역에서 HttpExceptionFilter를 적용시키는것
   //                                               // Nest 자체에서 던지는 에러 필터링까지 가능!
@@ -33,6 +37,13 @@ async function bootstrap() {
       },
     }),
   );
+
+  // 서버에 있는 static 파일을 제공하기 위한 middleware
+  // http://localhost:8000/media/cats/aaa.png
+  app.useStaticAssets(path.join(__dirname, './common', 'uploads'), {
+    prefix: '/media',
+  });
+  // static 파일을 제공해줄 때, media를 붙여서 제공
 
   // api-docs set up
   const config = new DocumentBuilder()

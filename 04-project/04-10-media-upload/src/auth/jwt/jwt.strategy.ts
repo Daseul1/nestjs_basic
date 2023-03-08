@@ -13,6 +13,7 @@ export class JwtStragety extends PassportStrategy(Strategy) {
       ignoreExpiration: false, // Jwt 토큰이 만료되었는지 확인 : 기본 false 설정
     });
   }
+
   async validate(payload: Payload) {
     // id를 통해서 cat 찾기
     const cat = await this.catsRepository.findCatIdWithoutPassword(payload.sub);

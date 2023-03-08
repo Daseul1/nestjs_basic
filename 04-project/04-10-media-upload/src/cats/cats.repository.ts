@@ -35,4 +35,15 @@ export class CatsRepository {
     // select('email name'): email 과 name 가져오기 => 띄어쓰기로 구분
     return cat;
   }
+
+  // upload image update
+  async findByIdAndUpdateImg(id: string, fileName: string) {
+    const cat = await this.catModel.findById(id);
+
+    cat.imgUrl = `http://loaclhost:8000/media/${fileName}`;
+    const newCat = await cat.save();
+    console.log(newCat);
+
+    return newCat.readOnlyData;
+  }
 }
